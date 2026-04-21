@@ -11,7 +11,7 @@ A web application built with Next.js and MySQL to manage student placements and 
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/SrinjayDas/placement-mapping-system
    cd dbms_project
    ```
 
