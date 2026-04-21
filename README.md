@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Placement Management System
 
-## Getting Started
+A web application built with Next.js and MySQL to manage student placements and recruitment drives.
 
-First, run the development server:
+## Prerequisites
 
+- Node.js (v18 or higher)
+- MySQL Server
+
+## Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd dbms_project
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Database Setup:**
+   - Ensure your MySQL server is running.
+   - The default configuration (in `src/lib/db.js` and migration scripts) expects:
+     - **Host:** `localhost`
+     - **User:** `root`
+     - **Password:** `0000`
+     - **Port:** `3306`
+   - Create the database:
+     ```sql
+     CREATE DATABASE placement_db;
+     ```
+   - Ensure your `student` and `drive` tables are created in the database.
+
+4. **Run Migrations:**
+   Run the following scripts to update the database schema (adding passwords and max intake) and initialize the admin table:
+   ```bash
+   node migrate_db.js
+   node migrate_admin.js
+   node migrate_max_intake.js
+   ```
+
+## Running the Application
+
+Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Admin Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+A new `admin` table has been added to handle administrative tasks and dashboard access.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Admin Table Schema
+| Column | Type | Description |
+| --- | --- | --- |
+| `AdminID` | INT | Primary Key, Auto-increment |
+| `Username` | VARCHAR(50) | Unique username |
+| `Password` | VARCHAR(255) | Login password |
 
-## Learn More
+### Default Admin Credentials
+- **Username:** `admin`
+- **Password:** `admin`
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You can access the admin login at `/admin/login`.

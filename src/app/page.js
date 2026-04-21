@@ -1,65 +1,85 @@
-import Image from "next/image";
+import React from 'react';
+import { db } from '@/lib/db';
+import { cookies } from 'next/headers';
 
-export default function Home() {
+export const dynamic = 'force-dynamic';
+
+export default async function MetricsPage() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('student_session');
+  const isLoggedIn = !!session;
+
+  const [drivesQuery] = await db.query('SELECT COUNT(*) as count FROM drive');
+  const [companiesQuery] = await db.query('SELECT COUNT(*) as count FROM company');
+  const [studentsQuery] = await db.query('SELECT COUNT(*) as count FROM student');
+  const [appsQuery] = await db.query('SELECT COUNT(*) as count FROM application');
+  
+  const stats = {
+    drives: drivesQuery[0].count,
+    companies: companiesQuery[0].count,
+    students: studentsQuery[0].count,
+    applications: appsQuery[0].count
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main>
+      {/* STATS SECTION - Now the Main Entry Point */}
+      <section className="section-padding container" id="stats" style={{textAlign: 'center', marginTop: '4rem', position: 'relative', zIndex: 10}}>
+         <p style={{color: 'var(--orange-base)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.85rem', marginBottom: '1rem', fontWeight: 600}}>System Overview</p>
+         <h1 style={{fontSize: '3.5rem', marginBottom: '1.5rem', fontWeight: 700}}>Active Placement Metrics</h1>
+         <p className="text-dim" style={{maxWidth: '600px', margin: '0 auto 3rem'}}>Real-time database metrics tracking the performance and engagement of the current placement season.</p>
+
+         <div style={{display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '5rem'}}>
+               <a href="/drives" className="btn-orange">View All Drives</a>
+               {isLoggedIn ? (
+                 <a href="/profile" className="btn-orange" style={{ background: 'transparent', border: '1px solid var(--orange-base)', color: 'var(--orange-base)' }}>Go to Profile</a>
+               ) : (
+                 <a href="/login" className="btn-orange" style={{ background: 'transparent', border: '1px solid var(--orange-base)', color: 'var(--orange-base)' }}>Student Login</a>
+               )}
+         </div>
+
+         <div className="grid-2" style={{marginBottom: '2rem'}}>
+            <div className="card-dark" style={{textAlign: 'left'}}>
+               <h3 style={{fontSize: '1.5rem', marginBottom: '1rem'}}>Total Drives Hosted</h3>
+               <p className="text-dim" style={{fontSize: '0.9rem', marginBottom: '2rem'}}>A network of companies actively hiring.</p>
+               <div style={{display: 'flex', alignItems: 'flex-end', gap: '1rem'}}>
+                 <span style={{fontSize: '3rem', fontWeight: 700, color: 'var(--orange-base)'}}>{stats.drives}</span>
+                 <span className="text-dim" style={{marginBottom: '12px'}}>active</span>
+               </div>
+               <div style={{position: 'absolute', bottom: -6, right: '10%', width: 120, height: 120, background: 'var(--orange-glow)', filter: 'blur(40px)'}}></div>
+            </div>
+            <div className="card-dark" style={{textAlign: 'left'}}>
+               <h3 style={{fontSize: '1.5rem', marginBottom: '1rem'}}>Participating Companies</h3>
+               <p className="text-dim" style={{fontSize: '0.9rem', marginBottom: '2rem'}}>The best tech giants and startups.</p>
+               <div style={{display: 'flex', alignItems: 'flex-end', gap: '1rem'}}>
+                 <span style={{fontSize: '3rem', fontWeight: 700, color: 'var(--orange-base)'}}>{stats.companies}</span>
+                 <span className="text-dim" style={{marginBottom: '12px'}}>registered</span>
+               </div>
+            </div>
+         </div>
+         
+         <div className="grid-2">
+            <div className="card-dark" style={{textAlign: 'left'}}>
+               <h3 style={{fontSize: '1.5rem', marginBottom: '1rem'}}>Total Students</h3>
+               <p className="text-dim" style={{fontSize: '0.9rem', marginBottom: '2rem'}}>Our talented pool of candidates ready for the workforce.</p>
+               <div style={{display: 'flex', alignItems: 'flex-end', gap: '1rem'}}>
+                 <span style={{fontSize: '3rem', fontWeight: 700, color: 'var(--text-primary)'}}>{stats.students}</span>
+                 <span className="text-dim" style={{marginBottom: '12px'}}>eligible</span>
+               </div>
+            </div>
+            <div className="card-dark card-glow" style={{background: 'radial-gradient(ellipse at bottom, rgba(249,115,22,0.2) 0%, var(--bg-card) 60%)', textAlign: 'left'}}>
+               <h3 style={{fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--orange-base)'}}>Applications Submitted</h3>
+               <p className="text-dim" style={{fontSize: '0.9rem', marginBottom: '2rem'}}>Massive engagement from students across all departments.</p>
+               <div style={{display: 'flex', alignItems: 'flex-end', gap: '1rem'}}>
+                 <span style={{fontSize: '3.5rem', fontWeight: 700, color: 'var(--text-primary)'}}>{stats.applications}</span>
+                 <span className="text-dim" style={{marginBottom: '14px'}}>total</span>
+               </div>
+               <div style={{height: 40, borderBottom: '2px solid var(--orange-base)', position: 'relative', marginTop: '1rem'}}>
+                  <div style={{position: 'absolute', bottom: -6, left: '80%', transform: 'translateX(-50%)', width: 12, height: 12, background: 'var(--text-primary)', borderRadius: '50%', boxShadow: '0 0 10px var(--orange-base)'}}></div>
+               </div>
+            </div>
+         </div>
+      </section>
+    </main>
   );
 }

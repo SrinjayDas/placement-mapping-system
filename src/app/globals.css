@@ -1,26 +1,183 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-dark: #080605;
+  --bg-surface: #110c0a;
+  --bg-card: #18110d;
+  --text-primary: #ffffff;
+  --text-secondary: #a3958e;
+  --text-muted: #6b5c55;
+  --orange-base: #f97316;
+  --orange-bright: #ffed4a;
+  --orange-glow: rgba(249, 115, 22, 0.2);
+  --border-light: rgba(255, 255, 255, 0.06);
+  --border-orange: rgba(249, 115, 22, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* The Hero Horizon Glow */
+.hero-section {
+  position: relative;
+  text-align: center;
+  padding: 10rem 0 14rem;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, rgba(249, 115, 22, 0.15) 0%, transparent 80%);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  bottom: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 600px;
+  background: radial-gradient(ellipse 100% 50% at 50% 100%, rgba(249, 115, 22, 0.35) 0%, rgba(249, 115, 22, 0.05) 50%, transparent 80%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(40px);
+}
+
+
+/* Text Styling */
+.display-1 {
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.text-dim {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Buttons */
+.btn-orange {
+  background: linear-gradient(to bottom, #ea580c, #c2410c);
+  color: white;
+  font-weight: 500;
+  padding: 12px 28px;
+  border-radius: 40px;
+  border: 1px solid #fdba74;
+  box-shadow: 0 0 20px var(--orange-glow), inset 0 2px 4px rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-orange:hover {
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.5), inset 0 2px 4px rgba(255,255,255,0.6);
+  transform: translateY(-2px);
+}
+
+/* Dark Cards */
+.card-dark {
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-dark) 100%);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-dark::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-orange), transparent);
+  opacity: 0.5;
+}
+
+.card-glow {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px var(--border-orange) inset, 0 0 20px var(--orange-glow);
+}
+
+/* Grid Systems */
+.section-padding {
+  padding: 8rem 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  margin: 1rem auto;
+  max-width: 900px;
+  background: rgba(17, 12, 10, 0.8);
+  border: 1px solid var(--border-light);
+  border-radius: 40px;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 1rem;
+  z-index: 100;
+}
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.nav-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Specific UI Elements from Image */
+.glow-icon-wrap {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--orange-glow), inset 0 0 10px var(--orange-glow);
+  margin-bottom: 20px;
+}
+
+.glow-icon {
+  color: var(--orange-base);
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 0 8px var(--orange-base));
 }
